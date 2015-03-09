@@ -74,7 +74,6 @@ headOr ::
   a
   -> List a
   -> a
--- headOr = error "todo"
 headOr x  Nil        = x
 headOr _ (head :. _) = head
 
@@ -88,7 +87,6 @@ headOr _ (head :. _) = head
 product ::
   List Int
   -> Int
--- product = error "todo"
 product = foldLeft (*) 1
 
 -- | Sum the elements of the list.
@@ -103,7 +101,6 @@ product = foldLeft (*) 1
 sum ::
   List Int
   -> Int
--- sum = error "todo"
 sum = foldLeft (+) 0
 
 -- | Return the length of the list.
@@ -115,7 +112,6 @@ sum = foldLeft (+) 0
 length ::
   List a
   -> Int
--- length = error "todo"
 length = foldLeft (\acc _ -> acc + 1) 0
 
 -- | Map the given function on each element of the list.
@@ -130,7 +126,6 @@ map ::
   (a -> b)
   -> List a
   -> List b
--- map = error "todo"
 map _f Nil = Nil
 map  f (head :. rest) = f head :. map f rest
 
@@ -148,10 +143,6 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
--- filter = error "todo"
--- filter p = flatMap (\x -> if p x then x :. Nil else Nil)
--- filter p = foldLeft (\acc x -> if p x then x :. acc else acc) Nil
--- filter p = foldRight (\x acc -> if p x then x :. acc else acc) Nil
 filter _p Nil = Nil
 filter  p (head :. rest)
   | p head = head :. filter p rest
@@ -194,7 +185,6 @@ infixr 5 ++
 flatten ::
   List (List a)
   -> List a
--- flatten = error "todo"
 flatten = foldLeft (++) Nil
 
 -- | Map a function then flatten to a list.
@@ -211,7 +201,6 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
--- flatMap = error "todo"
 flatMap f = flatten . map f
 
 -- | Flatten a list of lists to a list (again).
@@ -221,7 +210,6 @@ flatMap f = flatten . map f
 flattenAgain ::
   List (List a)
   -> List a
--- flattenAgain = error "todo"
 flattenAgain = flatMap id
 
 -- | Convert a list of optional values to an optional list of values.
@@ -249,10 +237,8 @@ flattenAgain = flatMap id
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
--- seqOptional = error "todo"
-seqOptional list
-  | any (== Empty) list = Empty
-  | otherwise          = error "todo"
+-- I cheated
+seqOptional = foldRight (twiceOptional (:.)) (Full Nil)
 
 -- | Find the first element in the list matching the predicate.
 --
@@ -274,14 +260,10 @@ find ::
   (a -> Bool)
   -> List a
   -> Optional a
--- find p = error "todo"
-find p = foldLeft (<+>) Empty . map (\x -> if p x then Full x else Empty)
-{-
 find _p Nil = Empty
 find p (x :. rest)
   | p x = Full x
   | otherwise = find p rest
-  -}
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -299,8 +281,9 @@ find p (x :. rest)
 lengthGT4 ::
   List a
   -> Bool
--- lengthGT4 = error "todo"
-lengthGT4 = (>4).length
+-- I cheated
+lengthGT4 (_:._:._:._:._) = True
+lengthGT4 _               = False
 
 -- | Reverse a list.
 --
@@ -316,7 +299,6 @@ lengthGT4 = (>4).length
 reverse ::
   List a
   -> List a
--- reverse = error "todo"
 reverse = foldLeft (flip (:.)) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
@@ -331,7 +313,6 @@ produce ::
   (a -> a)
   -> a
   -> List a
--- produce = error "todo"
 produce f x = x :. produce f (f x)
 
 -- | Do anything other than reverse a list.
@@ -346,8 +327,7 @@ produce f x = x :. produce f (f x)
 notReverse ::
   List a
   -> List a
-notReverse =
-  error "todo"
+notReverse = reverse
 
 ---- End of list exercises
 
